@@ -1,0 +1,16 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @fake_dns_server.name %>
+</p>
+
+<p>
+  <strong>Default server:</strong>
+  <%= @fake_dns_server.default_server %>
+</p>
+
+<%= react_component('Logs', name: @fake_dns_server.name) %>
+
+<%= link_to 'Edit', edit_fake_dns_server_path(@fake_dns_server) %> |
+<%= link_to 'Back', fake_dns_servers_path %>

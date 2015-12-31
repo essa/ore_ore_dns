@@ -1,0 +1,27 @@
+<%= form_for(fake_dns_server) do |f| %>
+  <% if fake_dns_server.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(fake_dns_server.errors.count, "error") %> prohibited this fake_dns_server from being saved:</h2>
+
+      <ul>
+      <% fake_dns_server.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :default_server %>
+    <%= f.text_field :default_server %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
