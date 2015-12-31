@@ -11,13 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151231083307) do
+ActiveRecord::Schema.define(version: 20151231084925) do
 
   create_table "fake_dns_servers", force: :cascade do |t|
     t.string   "name"
     t.string   "default_server"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+  end
+
+  create_table "log_messages", force: :cascade do |t|
+    t.integer  "fake_dns_server_id"
+    t.integer  "level"
+    t.text     "message"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
   end
 
 end

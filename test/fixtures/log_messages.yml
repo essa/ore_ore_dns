@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  fake_dns_server_id: 1
+  level: 1
+  message: MyText
+
+two:
+  fake_dns_server_id: 1
+  level: 1
+  message: MyText
