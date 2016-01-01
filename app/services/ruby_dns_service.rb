@@ -15,13 +15,14 @@ class RubyDnsService
   def start
     require "open3"
     Open3.popen3(RbConfig.ruby) do |i, o, e, w|
-      s = dns_script
-      puts s
-      i.puts s
+      p w.pid
+      @@pid = w.pid
+      i.puts dns_script
       i.close
       Thread.start do
         e.each do |line|
           puts line
+          @server.log_messages.create message: line
         end
       end
       o.each do |line|

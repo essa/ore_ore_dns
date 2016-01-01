@@ -1,6 +1,5 @@
 class LogMessage extends React.Component {
   render () {
-    console.log(this.props);
     return (
       <tr>
         <td>{this.props.created_at}</td>

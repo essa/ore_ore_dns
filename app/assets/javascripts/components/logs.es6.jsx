@@ -7,15 +7,20 @@ class Logs extends React.Component {
     });
   }
   onClickStart(e) {
-    console.log('onClick', this);
-    App.dns.start_server(this.props.id);
+    App.dns.start_server(this.props.id, this);
+  }
+  onReceiveMessage(data) {
+    console.log(data);
+    let m = this.state.log_messages;
+    m.push(data);
+    console.log(m);
+    this.setState({log_messages: m});
   }
   render () {
     if (!this.state) {
       return <div>loading...</div>;
     }
     const messages = this.state.log_messages.map((m)=>{
-      console.log(m);
       return <LogMessage key={m.id} message={m.message} created_at={m.created_at}/>;
     });
     const onClickStart = this.onClickStart.bind(this);
