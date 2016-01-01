@@ -1,10 +1,14 @@
 class StartFakeDnsJob < ApplicationJob
   queue_as :default
 
-  def perform(server_id, *args)
+  def perform(params, *args)
+    p params
+    server_id = params['server_id']
     s = FakeDnsServer.find(server_id)
-    s.log_messages.destroy_all
-    p 'perform', s
-    RubyDnsService.start s
+    if params[:command] == 'start'
+      RubyDnsService.start s
+    else
+      RubyDnsService.stop s
+    end
   end
 end

@@ -8,6 +8,10 @@ class RubyDnsService
     end
   end
 
+  def self.stop(s)
+    Process.kill('TERM', @@pid)
+  end
+
   def initialize(s)
     @server = s
   end
@@ -29,7 +33,7 @@ class RubyDnsService
       o.each do |line|
         @server.log_messages.create message: line
       end
-      puts "process end"
+      @server.log_messages.create message: 'server terminated'
       p w
     end
   rescue

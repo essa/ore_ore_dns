@@ -9,8 +9,16 @@ class DnsChannel < ApplicationCable::Channel
   end
 
   def start_server(params)
-    p 772232, params['server_id']
     ActionCable.server.broadcast 'dns_channel', message: 'server starting'
-    StartFakeDnsJob.perform_later params['server_id']
+    StartFakeDnsJob.perform_later params.merge(command: 'start')
+  end
+
+  def stop_server(params)
+    StartFakeDnsJob.perform_later params.merge(command: 'stop')
+  end
+
+  def clear_logs(params)
+    s = FakeDnsServer.find(params['server_id'])
+    s.log_messages.destroy_all
   end
 end

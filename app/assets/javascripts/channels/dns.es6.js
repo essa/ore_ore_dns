@@ -13,5 +13,13 @@ App.dns = App.cable.subscriptions.create("DnsChannel", {
   start_server: function(server_id, component) {
     this.component = component;
     return this.perform('start_server', { server_id: server_id });
+  },
+  stop_server: function(server_id, component) {
+    this.component = component;
+    return this.perform('stop_server', { server_id: server_id });
+  },
+  clear_logs: function(server_id, component) {
+    this.component = component;
+    return this.perform('clear_logs', { server_id: server_id });
   }
 });
