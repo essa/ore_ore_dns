@@ -4,6 +4,6 @@ class StartFakeDnsJob < ApplicationJob
   def perform(server_id, *args)
     s = FakeDnsServer.find(server_id)
     p 'perform', s
-    s.start
+    RubyDnsService.start s
   end
 end
