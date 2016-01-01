@@ -21,12 +21,13 @@ class RubyDnsService
       i.close
       Thread.start do
         e.each do |line|
-          puts line
-          @server.log_messages.create message: line
+          m = parse_json_message(line)
+          p m
+          @server.log_messages.create message: m['message']
         end
       end
       o.each do |line|
-        puts line
+        @server.log_messages.create message: line
       end
       puts "process end"
       p w
@@ -36,11 +37,17 @@ class RubyDnsService
     puts $@
   end
 
+  def parse_json_message(line)
+    JSON.parse(line)
+  rescue
+    { 'message' => line.sub(/^I.*-- :/,'') }
+  end
+
   def dns_script
     <<-EOS
-puts 12334555
 require 'rubydns'
 require 'rubydns/system'
+require 'niboshi_json_formatter'
 
 INTERFACES = [
   [:udp, "0.0.0.0", 5300],
@@ -60,18 +67,22 @@ FAKE_HOSTS = %w{
 }
 
 RubyDNS::run_server(:listen => INTERFACES) do
+  on(:start) do
+		@logger.level = Logger::DEBUG
+    @logger.formatter = Niboshi::JsonFormatter.new
+    @logger.info 'start'
+	end
+
   FAKE_HOSTS.each do |h|
     match(h, IN::A) do |transaction|
-      puts 'staging host'
       #transaction.respond!(UPSTREAM.addresses_for('bluegreen-haproxy-live-1423424729.ap-northeast-1.elb.amazonaws.com').first)
-      transaction.respond!(UPSTREAM.addresses_for('bluegreen-haproxy-staged-716614297.ap-northeast-1.elb.amazonaws.com').first)
-      #transaction.respond!("192.168.99.77")
+      #transaction.respond!(UPSTREAM.addresses_for('bluegreen-haproxy-staged-716614297.ap-northeast-1.elb.amazonaws.com').first)
+      transaction.respond!("192.168.99.77")
     end
   end
 
   #passthrough
   otherwise do |transaction|
-    puts "upstream"
     transaction.passthrough!(UPSTREAM)
   end
 end
