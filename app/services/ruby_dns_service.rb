@@ -1,7 +1,7 @@
 
 
 class RubyDnsService
-
+  @@pid = nil
   def self.start(s)
     Thread.start(s) do |server|
       RubyDnsService.new(server).start
@@ -12,6 +12,20 @@ class RubyDnsService
     Process.kill('TERM', @@pid)
   end
 
+  def self.running?(server_id = nil)
+    if server_id and @server
+      if server_id != @server.id
+        return false
+      end
+    end
+    if @@pid
+      Process.kill 0, @@pid rescue false
+      true
+    else
+      false
+    end
+  end
+
   def initialize(s)
     @server = s
   end
@@ -19,6 +33,7 @@ class RubyDnsService
   def start
     require "open3"
     Open3.popen3(RbConfig.ruby) do |i, o, e, w|
+      ActionCable.server.broadcast 'dns_channel', status: { running: true }
       p w.pid
       @@pid = w.pid
       i.puts dns_script
@@ -33,6 +48,7 @@ class RubyDnsService
       o.each do |line|
         @server.log_messages.create message: line
       end
+      ActionCable.server.broadcast 'dns_channel', status: { running: false }
       @server.log_messages.create message: 'server terminated'
       p w
     end
@@ -74,7 +90,7 @@ RubyDNS::run_server(:listen => INTERFACES) do
   on(:start) do
 		@logger.level = Logger::DEBUG
     @logger.formatter = Niboshi::JsonFormatter.new
-    @logger.info 'start'
+    @logger.info 'dns server started'
 	end
 
   FAKE_HOSTS.each do |h|
@@ -92,26 +108,5 @@ RubyDNS::run_server(:listen => INTERFACES) do
 end
 
     EOS
-  end
-
-  def self.start_x(s)
-    p "RubyDnsService#start", s
-    Thread.start do
-      RubyDNS::run_server(:listen => INTERFACES) do
-        FAKE_HOSTS.each do |h|
-          match(/#{h}/, IN::A) do |transaction|
-            puts 'staging host'
-            #transaction.respond!(UPSTREAM.addresses_for('bluegreen-haproxy-live-1423424729.ap-northeast-1.elb.amazonaws.com').first)
-            transaction.respond!(UPSTREAM.addresses_for('bluegreen-haproxy-staged-716614297.ap-northeast-1.elb.amazonaws.com').first)
-          end
-        end
-
-        #passthrough
-        otherwise do |transaction|
-          puts "upstream"
-          transaction.passthrough!(UPSTREAM)
-        end
-      end
-    end
   end
 end

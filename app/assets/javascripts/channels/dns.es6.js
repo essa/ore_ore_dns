@@ -6,8 +6,11 @@ App.dns = App.cable.subscriptions.create("DnsChannel", {
     console.log('disconnected');
   },
   received: function(data) {
-    if (this.component) {
+    if (this.component && data.message) {
       this.component.onReceiveMessage(data);
+    }
+    if (this.component && data.status) {
+      this.component.onUpdateStatus(data.status);
     }
   },
   start_server: function(server_id, component) {

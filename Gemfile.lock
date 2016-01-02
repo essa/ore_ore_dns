@@ -1,5 +1,6 @@
 GEM
   remote: https://rubygems.org/
+  remote: https://rails-assets.org/
   specs:
     actioncable (5.0.0.beta1)
       actionpack (= 5.0.0.beta1)
@@ -130,6 +131,7 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 5.0.0.beta1)
       sprockets-rails (>= 2.0.0)
+    rails-assets-momentjs (2.10.6)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
     rails-dom-testing (1.0.7)
@@ -194,6 +196,7 @@ DEPENDENCIES
   niboshi_json_formatter
   puma
   rails (>= 5.0.0.beta1, < 5.1)
+  rails-assets-momentjs!
   react-rails (~> 1.5.0)
   rubydns
   sqlite3

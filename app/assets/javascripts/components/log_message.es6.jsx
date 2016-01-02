@@ -1,8 +1,9 @@
 class LogMessage extends React.Component {
   render () {
+    const hms = moment(this.props.created_at).format('HH:MM:ss');
     return (
       <tr>
-        <td>{this.props.created_at}</td>
+        <td>{hms}</td>
         <td>{this.props.message}</td>
       </tr>
     );

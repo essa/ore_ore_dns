@@ -44,3 +44,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'react-rails', '~> 1.5.0'
 gem 'rubydns'
 gem 'niboshi_json_formatter'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-momentjs'
+end

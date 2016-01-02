@@ -1,6 +1,10 @@
 class Logs extends React.Component {
   componentDidMount() {
     console.log('didMount', this, this.props);
+    this.setState({log_messages: []});
+    $.get(`/fake_dns_servers/${this.props.id}.json`, (res) =>{
+      this.setState({running: res.status.running});
+    });
     $.get(`/fake_dns_servers/${this.props.id}/log_messages`, (res) =>{
       this.setState({log_messages: res.log_messages});
     });
@@ -22,8 +26,11 @@ class Logs extends React.Component {
     console.log(data);
     let m = this.state.log_messages;
     m.unshift(data);
-    console.log(m);
     this.setState({log_messages: m});
+  }
+  onUpdateStatus(data) {
+    console.log(data);
+    this.setState({running: data.running});
   }
   render () {
     if (!this.state) {
@@ -35,14 +42,20 @@ class Logs extends React.Component {
     const onClickStart = this.onClickStart.bind(this);
     const onClickStop = this.onClickStop.bind(this);
     const onClickClear = this.onClickClear.bind(this);
+    let runningMessage = '';
+    if (this.state.running)
+      runningMessage = 'running';
     return (
       <div>
         <div>
           Name: {this.props.name}
         </div>
         <div>
-          <button onClick={onClickStart}>Start Server</button>
-          <button onClick={onClickStop}>Stop Server</button>
+          Status: {runningMessage}
+        </div>
+        <div>
+          <button onClick={onClickStart} disabled={this.state.running} >Start Server</button>
+          <button onClick={onClickStop} disabled={!this.state.running} >Stop Server</button>
           <button onClick={onClickClear}>Clear logs</button>
         </div>
         Logs:
