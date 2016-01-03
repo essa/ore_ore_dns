@@ -48,9 +48,6 @@ class Logs extends React.Component {
     return (
       <div>
         <div>
-          Name: {this.props.name}
-        </div>
-        <div>
           Status: {runningMessage}
         </div>
         <div>

@@ -1,14 +1,10 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Name:</strong>
+<div>
+  <strong>Server Name:</strong>
   <%= @fake_dns_server.name %>
-</p>
+</div>
 
-<p>
-  <strong>Default server:</strong>
-  <%= @fake_dns_server.default_server %>
-</p>
 
 <%= react_component('Logs', id: @fake_dns_server.id, name: @fake_dns_server.name) %>
 

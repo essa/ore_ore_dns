@@ -36,16 +36,18 @@ class RubyDnsService
       ActionCable.server.broadcast 'dns_channel', status: { running: true }
       p w.pid
       @@pid = w.pid
+      #puts dns_script
       i.puts dns_script
       i.close
       Thread.start do
         e.each do |line|
           m = parse_json_message(line)
-          p m
+          #puts m['message']
           @server.log_messages.create message: m['message']
         end
       end
       o.each do |line|
+        #puts line
         @server.log_messages.create message: line
       end
       ActionCable.server.broadcast 'dns_channel', status: { running: false }
@@ -64,6 +66,10 @@ class RubyDnsService
   end
 
   def dns_script
+    upstream = @server.upstream
+    target_server = @server.target_server
+    hooking_hostnames = @server.hooking_hostnames
+    p upstream, target_server, hooking_hostnames
     <<-EOS
 require 'rubydns'
 require 'rubydns/system'
@@ -77,27 +83,23 @@ INTERFACES = [
 Name = Resolv::DNS::Name
 IN = Resolv::DNS::Resource::IN
 
-UPSTREAM = RubyDNS::Resolver.new([[:udp, "8.8.8.8", 53]])
-CONSUL = RubyDNS::Resolver.new([[:udp, "127.0.0.1", 8600]])
+UPSTREAM = RubyDNS::Resolver.new([[:udp, "#{upstream}", 53]])
 
 FAKE_HOSTS = %w{
-  store.degica.com
-  steam.degica.com
-  basecamp2.degica.com
+  #{hooking_hostnames}
 }
 
 RubyDNS::run_server(:listen => INTERFACES) do
   on(:start) do
 		@logger.level = Logger::DEBUG
     @logger.formatter = Niboshi::JsonFormatter.new
-    @logger.info 'dns server started'
+    @logger.info "dns server started for #{target_server}"
 	end
 
   FAKE_HOSTS.each do |h|
     match(h, IN::A) do |transaction|
-      #transaction.respond!(UPSTREAM.addresses_for('bluegreen-haproxy-live-1423424729.ap-northeast-1.elb.amazonaws.com').first)
-      #transaction.respond!(UPSTREAM.addresses_for('bluegreen-haproxy-staged-716614297.ap-northeast-1.elb.amazonaws.com').first)
-      transaction.respond!("192.168.99.77")
+      answer_cname = Name.create('#{target_server}')
+      transaction.respond!(answer_cname, resource_class: IN::CNAME, ttl: 0)
     end
   end
 

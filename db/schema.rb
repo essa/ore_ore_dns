@@ -15,9 +15,12 @@ ActiveRecord::Schema.define(version: 20151231084925) do
 
   create_table "fake_dns_servers", force: :cascade do |t|
     t.string   "name"
-    t.string   "default_server"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.string   "target_server"
+    t.string   "upstream"
+    t.string   "trace_level"
+    t.text     "hooking_hostnames"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "log_messages", force: :cascade do |t|

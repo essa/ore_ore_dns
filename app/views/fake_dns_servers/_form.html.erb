@@ -17,8 +17,18 @@
   </div>
 
   <div class="field">
-    <%= f.label :default_server %>
-    <%= f.text_field :default_server %>
+    <%= f.label :target_server %>
+    <%= f.text_field :target_server %>
+  </div>
+
+  <div class="field">
+    <%= f.label :upstream %>
+    <%= f.text_field :upstream %>
+  </div>
+
+  <div class="field">
+    <%= f.label :hooking_hostnames %>
+    <%= f.text_area :hooking_hostnames %>
   </div>
 
   <div class="actions">
