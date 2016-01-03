@@ -18,3 +18,4 @@
 //= require components
 //= require_tree .
 //= require momentjs
+//= require react-pure.min

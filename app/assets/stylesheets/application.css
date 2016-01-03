@@ -12,4 +12,10 @@
  *
  *= require_tree .
  *= require_self
+ *= require pure
  */
+
+ span.field-with-errors input:not([type=submit]) {
+     border-color: #800;
+     background: #ffe6e6 url(http://webdesigntutsplus.s3.amazonaws.com/tuts/214_html5_form_validation/demo/images/invalid.png) no-repeat 97% center;
+ }

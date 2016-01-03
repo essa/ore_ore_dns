@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<div>
+<div class='pure-u-18'>
   <strong>Server Name:</strong>
   <%= @fake_dns_server.name %>
 </div>
@@ -8,5 +8,8 @@
 
 <%= react_component('Logs', id: @fake_dns_server.id, name: @fake_dns_server.name) %>
 
-<%= link_to 'Edit', edit_fake_dns_server_path(@fake_dns_server) %> |
-<%= link_to 'Back', fake_dns_servers_path %>
+<br />
+<div class='pure-u-18'>
+  <%= link_to 'Edit', edit_fake_dns_server_path(@fake_dns_server) %> |
+  <%= link_to 'Back', fake_dns_servers_path %>
+</div>

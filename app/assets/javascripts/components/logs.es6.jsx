@@ -1,3 +1,5 @@
+
+
 class Logs extends React.Component {
   componentDidMount() {
     console.log('didMount', this, this.props);
@@ -33,6 +35,9 @@ class Logs extends React.Component {
     this.setState({running: data.running});
   }
   render () {
+    const Button = window.ReactPure.Button;
+    const Cell = window.ReactPure.Cell;
+    const Table = window.ReactPure.Table;
     if (!this.state) {
       return <div>loading...</div>;
     }
@@ -46,22 +51,25 @@ class Logs extends React.Component {
     if (this.state.running)
       runningMessage = 'running';
     return (
-      <div>
-        <div>
-          Status: {runningMessage}
-        </div>
-        <div>
-          <button onClick={onClickStart} disabled={this.state.running} >Start Server</button>
-          <button onClick={onClickStop} disabled={!this.state.running} >Stop Server</button>
-          <button onClick={onClickClear}>Clear logs</button>
-        </div>
-        Logs:
-        <div style={{height: '400px', 'overflowX': 'scroll'}}>
-        <table>
-        {messages}
-        </table>
-        </div>
-      </div>
+      <Cell size='18'>
+        <Cell>
+          Status:
+          {runningMessage}
+        </Cell>
+        <Cell>
+          <Button onClick={onClickStart} disabled={this.state.running} class="pure-button">Start Server</Button>
+          &nbsp;
+          <Button onClick={onClickStop} disabled={!this.state.running} >Stop Server</Button>
+          &nbsp;
+          <Button onClick={onClickClear}>Clear logs</Button>
+        </Cell>
+        <Cell size='2'>&nbsp;Logs</Cell>
+        <Cell size='10' style={{height: '400px', 'overflowX': 'scroll'}}>
+          <Table>
+            {messages}
+          </Table>
+        </Cell>
+      </Cell>
     );
   }
 }

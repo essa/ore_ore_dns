@@ -1,4 +1,4 @@
-<%= form_for(fake_dns_server) do |f| %>
+<%= form_for(fake_dns_server, html: { class: "pure-form pure-form-aligned" } ) do |f| %>
   <% if fake_dns_server.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(fake_dns_server.errors.count, "error") %> prohibited this fake_dns_server from being saved:</h2>
@@ -11,27 +11,28 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="pure-control-group">
     <%= f.label :name %>
-    <%= f.text_field :name %>
+    <%= f.text_field :name, class: "pure-u-6-24" %>
   </div>
 
-  <div class="field">
+  <div class="pure-control-group">
     <%= f.label :target_server %>
-    <%= f.text_field :target_server %>
+    <%= f.text_field :target_server, class: "pure-u-6-24" %>
   </div>
 
-  <div class="field">
+  <div class="pure-control-group">
     <%= f.label :upstream %>
-    <%= f.text_field :upstream %>
+    <%= f.text_field :upstream, class: "pure-u-6-24" %>
   </div>
 
-  <div class="field">
+  <div class="pure-control-group">
     <%= f.label :hooking_hostnames %>
-    <%= f.text_area :hooking_hostnames %>
+    <%= f.text_area :hooking_hostnames, class: "pure-u-6-24" %>
   </div>
-
-  <div class="actions">
-    <%= f.submit %>
+  <div class="pure-controls">
+    <div class="actions">
+      <%= f.submit(class: 'pure-button pure-button-primary') %>
+    </div>
   </div>
 <% end %>

@@ -3,13 +3,13 @@
 class RubyDnsService
   @@pid = nil
   def self.start(s)
-    Thread.start(s) do |server|
-      RubyDnsService.new(server).start
-    end
+    self.stop(s) if self.running?
+    RubyDnsService.new(s).start
   end
 
   def self.stop(s)
     Process.kill('TERM', @@pid)
+    Process.wait(@@pid)
   end
 
   def self.running?(server_id = nil)
@@ -52,9 +52,10 @@ class RubyDnsService
       end
       ActionCable.server.broadcast 'dns_channel', status: { running: false }
       @server.log_messages.create message: 'server terminated'
-      p w
+      @@pid = nil
     end
   rescue
+    @@pid = nil
     p $!
     puts $@
   end
@@ -91,7 +92,7 @@ FAKE_HOSTS = %w{
 
 RubyDNS::run_server(:listen => INTERFACES) do
   on(:start) do
-		@logger.level = Logger::DEBUG
+		@logger.level = Logger::INFO
     @logger.formatter = Niboshi::JsonFormatter.new
     @logger.info "dns server started for #{target_server}"
 	end

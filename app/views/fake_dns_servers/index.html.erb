@@ -2,11 +2,11 @@
 
 <h1>Fake Dns Servers</h1>
 
-<table>
+<table class="pure-table pure-table-horizontal">
   <thead>
     <tr>
       <th>Name</th>
-      <th>Default server</th>
+      <th>Status</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -15,8 +15,8 @@
     <% @fake_dns_servers.each do |fake_dns_server| %>
       <tr>
         <td><%= fake_dns_server.name %></td>
-        <td><%= fake_dns_server.default_server %></td>
-        <td><%= link_to 'Show', fake_dns_server %></td>
+        <td><%= fake_dns_server.status[:running]?'Running':'' %></td>
+        <td><%= link_to 'Show Console', fake_dns_server %></td>
         <td><%= link_to 'Edit', edit_fake_dns_server_path(fake_dns_server) %></td>
         <td><%= link_to 'Destroy', fake_dns_server, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
@@ -26,4 +26,4 @@
 
 <br>
 
-<%= link_to 'New Fake Dns Server', new_fake_dns_server_path %>
+<%= link_to 'New Fake Dns Server', new_fake_dns_server_path, class: 'pure-button pure-button-primary' %>
