@@ -32,6 +32,7 @@ class RubyDnsService
 
   def start
     require "open3"
+    @server.reload
     Open3.popen3(RbConfig.ruby) do |i, o, e, w|
       ActionCable.server.broadcast 'dns_channel', status: { running: true }
       p w.pid

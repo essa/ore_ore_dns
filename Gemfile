@@ -49,4 +49,5 @@ gem 'sass-rails'
 source 'https://rails-assets.org' do
   gem 'rails-assets-momentjs'
   gem 'rails-assets-pure'
+  gem 'rails-assets-eventemitter2'
 end

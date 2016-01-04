@@ -1,9 +1,17 @@
 
 
 class Logs extends React.Component {
+  constructor(props) {
+   super(props);
+   this.state = {log_messages: [], running: false};
+  }
   componentDidMount() {
-    console.log('didMount', this, this.props);
-    this.setState({log_messages: []});
+    App.dns_event.on('cable.dns.message', (data)=>{
+      this.onReceiveMessage(data);
+    });
+    App.dns_event.on('cable.dns.status', (data)=>{
+      this.onUpdateStatus(data.status);
+    });
     $.get(`/fake_dns_servers/${this.props.id}.json`, (res) =>{
       this.setState({running: res.status.running});
     });
@@ -25,14 +33,12 @@ class Logs extends React.Component {
     });
   }
   onReceiveMessage(data) {
-    console.log(data);
     let m = this.state.log_messages;
     m.unshift(data);
     this.setState({log_messages: m});
   }
-  onUpdateStatus(data) {
-    console.log(data);
-    this.setState({running: data.running});
+  onUpdateStatus(status) {
+    this.setState({running: status.running});
   }
   render () {
     const Button = window.ReactPure.Button;
@@ -57,9 +63,9 @@ class Logs extends React.Component {
           {runningMessage}
         </Cell>
         <Cell>
-          <Button onClick={onClickStart} disabled={this.state.running} class="pure-button">Start Server</Button>
+          <StartButton server_id={this.props.id} />
           &nbsp;
-          <Button onClick={onClickStop} disabled={!this.state.running} >Stop Server</Button>
+          <Button onClick={onClickStop} disabled={!this.state.running}>Stop Server</Button>
           &nbsp;
           <Button onClick={onClickClear}>Clear logs</Button>
         </Cell>

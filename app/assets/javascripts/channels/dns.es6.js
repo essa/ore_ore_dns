@@ -1,3 +1,4 @@
+App.dns_event = new EventEmitter2();
 App.dns = App.cable.subscriptions.create("DnsChannel", {
   connected: function() {
     console.log('connected');
@@ -6,11 +7,11 @@ App.dns = App.cable.subscriptions.create("DnsChannel", {
     console.log('disconnected');
   },
   received: function(data) {
-    if (this.component && data.message) {
-      this.component.onReceiveMessage(data);
+    if (data.message) {
+      App.dns_event.emit("cable.dns.message", data);
     }
-    if (this.component && data.status) {
-      this.component.onUpdateStatus(data.status);
+    if (data.status) {
+      App.dns_event.emit("cable.dns.status", data);
     }
   },
   start_server: function(server_id, component) {
