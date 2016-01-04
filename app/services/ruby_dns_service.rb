@@ -1,14 +1,13 @@
 
-
 class RubyDnsService
   @@pid = nil
   @@server = nil
+  @@mutex = Mutex.new
   def self.start(s)
-    p 'RubyDnsService.start', self.running?
     self.stop(s) if self.running?
-    p 'stopped'
-    RubyDnsService.new(s).start
-    p 'started'
+    @@mutex.synchronize do
+      RubyDnsService.new(s).start
+    end
   end
 
   def self.stop(s)
@@ -20,18 +19,19 @@ class RubyDnsService
   end
 
   def self.running?(server_id = nil)
-    p server_id, @@server
     if server_id and @@server
       if server_id != @@server.id
         return false
       end
     end
     if @@pid
-      Process.kill 0, @@pid rescue false
+      Process.kill 0, @@pid
       true
     else
       false
     end
+  rescue
+    false
   end
 
   def initialize(s)
@@ -60,7 +60,7 @@ class RubyDnsService
         @server.log_messages.create message: line
       end
       ActionCable.server.broadcast 'dns_channel', status: { running: false, server_id: @server.id }
-      @server.log_messages.create message: 'server terminated'
+      @server.log_messages.create message: 'server terminated' rescue nil
       @@pid = nil
     end
   rescue

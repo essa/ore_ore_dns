@@ -25,6 +25,10 @@ class ServerList extends React.Component {
           <td>{runningMessage}</td>
           <td>
             <StartButton server_id={s.id}>Start</StartButton>
+            &nbsp;
+            <Button href={`/fake_dns_servers/1`}>Show Console</Button>
+              &nbsp;
+            <Button href={`/fake_dns_servers/1/edit`}>Edit Config</Button>
           </td>
         </tr>
       );
@@ -35,7 +39,7 @@ class ServerList extends React.Component {
           <tr>
             <th>Name</th>
             <th>Status</th>
-            <th colspan="3"></th>
+            <th colspan="3">Operation</th>
           </tr>
         </thead>
 

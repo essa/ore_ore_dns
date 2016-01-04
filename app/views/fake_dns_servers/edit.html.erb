@@ -2,5 +2,8 @@
 
 <%= render 'form', fake_dns_server: @fake_dns_server %>
 
-<%= link_to 'Show', @fake_dns_server %> |
-<%= link_to 'Back', fake_dns_servers_path %>
+<%= link_to 'Destroy', @fake_dns_server, method: :delete, data: { confirm: 'Are you sure?' }, class: 'pure-button' %>
+&nbsp;
+<%= link_to 'Show Console', @fake_dns_server, class: 'pure-button' %>
+&nbsp;
+<%= link_to 'Back to Index', fake_dns_servers_path, class: 'pure-button' %>
