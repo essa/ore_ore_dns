@@ -2,6 +2,10 @@
 class DnsChannel < ApplicationCable::Channel
   def subscribed
     stream_from "dns_channel"
+    running_server = RubyDnsService.running_server
+    if running_server
+      ActionCable.server.broadcast 'dns_channel', status: running_server.status
+    end      
   end
 
   def unsubscribed

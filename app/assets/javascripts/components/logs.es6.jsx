@@ -7,17 +7,23 @@ class Logs extends React.Component {
   }
 
   componentDidMount() {
-    App.dns_event.on('cable.dns.message', (data)=>{
+    this.messageListener = (data)=>{
       let m = this.state.log_messages;
       m.unshift(data);
       this.setState({log_messages: m});
-    });
-    App.dns_event.on('cable.dns.status', (data)=>{
-      this.setState({running: data.status.running});
-    });
+    };
+    App.dns_event.on('cable.dns.message', this.messageListener);
+
+    this.statusListener = (data)=>this.setState({running: data.status.running});
+    App.dns_event.on('cable.dns.status', this.statusListener);
+
     $.get(`/fake_dns_servers/${this.props.id}/log_messages`, (res) =>{
       this.setState({log_messages: res.log_messages});
     });
+  }
+  componentWillUnmount() {
+    App.dns_event.off('cable.dns.message', this.messageListener);
+    App.dns_event.off('cable.dns.status', this.statusListener);
   }
 
   onClickClear(e) {
@@ -38,7 +44,7 @@ class Logs extends React.Component {
     const messages = this.state.log_messages.map((m)=>{
       const hms = moment(m.created_at).format('HH:MM:ss');
       return (
-        <tr>
+        <tr key={m.id}>
           <td>{hms}</td>
           <td>{m.message}</td>
         </tr>

@@ -34,6 +34,10 @@ class RubyDnsService
     false
   end
 
+  def self.running_server
+    @@server
+  end
+
   def initialize(s)
     @server = s
   end

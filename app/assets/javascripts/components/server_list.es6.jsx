@@ -4,13 +4,14 @@ class ServerList extends React.Component {
     this.state = { servers: [], status: {} };
   }
   componentDidMount() {
-    App.dns_event.on('cable.dns.status', (data)=>{
-      this.setState({status: data.status});
-    });
+    this.statusListener = (data)=>this.setState({status: data.status});
+    App.dns_event.on('cable.dns.status', this.statusListener);
     $.get(`/fake_dns_servers.json`, (res) =>{
-      console.log(res);
       this.setState({servers: res});
     });
+  }
+  componentWillUnmount() {
+    App.dns_event.off('cable.dns.status', this.statusListener);
   }
   render () {
     const Button = window.ReactPure.Button;
@@ -20,15 +21,15 @@ class ServerList extends React.Component {
       const runningMessage = (s.id == this.state.status.server_id && this.state.status.running)?'running':'';
 
       return (
-        <tr>
+        <tr key={s.id}>
           <td>{s.name}</td>
           <td>{runningMessage}</td>
           <td>
             <StartButton server_id={s.id}>Start</StartButton>
             &nbsp;
-            <Button href={`/fake_dns_servers/1`}>Show Console</Button>
+            <Button href={`/fake_dns_servers/${s.id}`}>Show Console</Button>
               &nbsp;
-            <Button href={`/fake_dns_servers/1/edit`}>Edit Config</Button>
+            <Button href={`/fake_dns_servers/${s.id}/edit`}>Edit Config</Button>
           </td>
         </tr>
       );
@@ -39,7 +40,7 @@ class ServerList extends React.Component {
           <tr>
             <th>Name</th>
             <th>Status</th>
-            <th colspan="3">Operation</th>
+            <th colSpan="3">Operation</th>
           </tr>
         </thead>
 
