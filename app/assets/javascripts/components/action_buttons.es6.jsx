@@ -2,11 +2,11 @@
 class ActionButton extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { running: false};
+    this.state = { status: {}};
   }
   componentDidMount() {
     App.dns_event.on('cable.dns.status', (data)=>{
-      this.setState({running: data.status.running});
+      this.setState({status: data.status});
     });
     $.get(`/fake_dns_servers/${this.props.server_id}.json`, (res) =>{
       this.setState({running: res.status.running});
@@ -27,7 +27,7 @@ ActionButton.propTypes = {
 
 class StartButton extends ActionButton {
   disabled() {
-    return this.state.running;
+    return this.props.server_id == this.state.status.server_id && this.state.status.running;
   }
   onClick() {
     App.dns.start_server(this.props.server_id, this);

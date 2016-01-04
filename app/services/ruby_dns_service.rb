@@ -2,19 +2,27 @@
 
 class RubyDnsService
   @@pid = nil
+  @@server = nil
   def self.start(s)
+    p 'RubyDnsService.start', self.running?
     self.stop(s) if self.running?
+    p 'stopped'
     RubyDnsService.new(s).start
+    p 'started'
   end
 
   def self.stop(s)
     Process.kill('TERM', @@pid)
     Process.wait(@@pid)
+    sleep 1
+  rescue
+
   end
 
   def self.running?(server_id = nil)
-    if server_id and @server
-      if server_id != @server.id
+    p server_id, @@server
+    if server_id and @@server
+      if server_id != @@server.id
         return false
       end
     end
@@ -32,9 +40,9 @@ class RubyDnsService
 
   def start
     require "open3"
-    @server.reload
+    @@server = @server.reload
     Open3.popen3(RbConfig.ruby) do |i, o, e, w|
-      ActionCable.server.broadcast 'dns_channel', status: { running: true }
+      ActionCable.server.broadcast 'dns_channel', status: { running: true, server_id: @server.id }
       p w.pid
       @@pid = w.pid
       #puts dns_script
@@ -51,7 +59,7 @@ class RubyDnsService
         #puts line
         @server.log_messages.create message: line
       end
-      ActionCable.server.broadcast 'dns_channel', status: { running: false }
+      ActionCable.server.broadcast 'dns_channel', status: { running: false, server_id: @server.id }
       @server.log_messages.create message: 'server terminated'
       @@pid = nil
     end

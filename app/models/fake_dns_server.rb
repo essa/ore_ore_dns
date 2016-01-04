@@ -3,6 +3,6 @@ class FakeDnsServer < ApplicationRecord
 
   validates_presence_of :name, :target_server, :upstream
   def status
-    { running: RubyDnsService.running?(self) }
+    { running: RubyDnsService.running?(self.id) }
   end
 end
