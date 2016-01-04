@@ -5,26 +5,21 @@ class Logs extends React.Component {
    super(props);
    this.state = {log_messages: [], running: false};
   }
+
   componentDidMount() {
     App.dns_event.on('cable.dns.message', (data)=>{
-      this.onReceiveMessage(data);
+      let m = this.state.log_messages;
+      m.unshift(data);
+      this.setState({log_messages: m});
     });
     App.dns_event.on('cable.dns.status', (data)=>{
-      this.onUpdateStatus(data.status);
-    });
-    $.get(`/fake_dns_servers/${this.props.id}.json`, (res) =>{
-      this.setState({running: res.status.running});
+      this.setState({running: data.status.running});
     });
     $.get(`/fake_dns_servers/${this.props.id}/log_messages`, (res) =>{
       this.setState({log_messages: res.log_messages});
     });
   }
-  onClickStart(e) {
-    App.dns.start_server(this.props.id, this);
-  }
-  onClickStop(e) {
-    App.dns.stop_server(this.props.id, this);
-  }
+
   onClickClear(e) {
     //this.setState({log_messages: []});
     App.dns.clear_logs(this.props.id, this);
@@ -32,14 +27,7 @@ class Logs extends React.Component {
       this.setState({log_messages: res.log_messages});
     });
   }
-  onReceiveMessage(data) {
-    let m = this.state.log_messages;
-    m.unshift(data);
-    this.setState({log_messages: m});
-  }
-  onUpdateStatus(status) {
-    this.setState({running: status.running});
-  }
+
   render () {
     const Button = window.ReactPure.Button;
     const Cell = window.ReactPure.Cell;
@@ -50,8 +38,6 @@ class Logs extends React.Component {
     const messages = this.state.log_messages.map((m)=>{
       return <LogMessage key={m.id} message={m.message} created_at={m.created_at}/>;
     });
-    const onClickStart = this.onClickStart.bind(this);
-    const onClickStop = this.onClickStop.bind(this);
     const onClickClear = this.onClickClear.bind(this);
     let runningMessage = '';
     if (this.state.running)
@@ -63,11 +49,11 @@ class Logs extends React.Component {
           {runningMessage}
         </Cell>
         <Cell>
-          <StartButton server_id={this.props.id} />
+          <StartButton key='start' server_id={this.props.id} />
           &nbsp;
-          <Button onClick={onClickStop} disabled={!this.state.running}>Stop Server</Button>
+          <StopButton key='stop' server_id={this.props.id} />
           &nbsp;
-          <Button onClick={onClickClear}>Clear logs</Button>
+          <Button key='clear' onClick={onClickClear}>Clear Logs</Button>
         </Cell>
         <Cell size='2'>&nbsp;Logs</Cell>
         <Cell size='10' style={{height: '400px', 'overflowX': 'scroll'}}>

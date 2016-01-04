@@ -11,6 +11,7 @@ App.dns = App.cable.subscriptions.create("DnsChannel", {
       App.dns_event.emit("cable.dns.message", data);
     }
     if (data.status) {
+      console.log(data);
       App.dns_event.emit("cable.dns.status", data);
     }
   },
