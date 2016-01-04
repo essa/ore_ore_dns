@@ -36,7 +36,13 @@ class Logs extends React.Component {
       return <div>loading...</div>;
     }
     const messages = this.state.log_messages.map((m)=>{
-      return <LogMessage key={m.id} message={m.message} created_at={m.created_at}/>;
+      const hms = moment(m.created_at).format('HH:MM:ss');
+      return (
+        <tr>
+          <td>{hms}</td>
+          <td>{m.message}</td>
+        </tr>
+      );
     });
     const onClickClear = this.onClickClear.bind(this);
     let runningMessage = '';
@@ -58,7 +64,9 @@ class Logs extends React.Component {
         <Cell size='2'>&nbsp;Logs</Cell>
         <Cell size='10' style={{height: '400px', 'overflowX': 'scroll'}}>
           <Table>
-            {messages}
+            <tbody>
+              {messages}
+            </tbody>
           </Table>
         </Cell>
       </Cell>
