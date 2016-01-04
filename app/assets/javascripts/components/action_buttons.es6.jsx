@@ -8,7 +8,7 @@ class ActionButton extends React.Component {
     this.statusListener = (data)=>this.setState({status: data.status});
     App.dns_event.on('cable.dns.status', this.statusListener);
     $.get(`/fake_dns_servers/${this.props.server_id}.json`, (res) =>{
-      this.setState({running: res.status.running});
+      this.setState({status: res.status});
     });
   }
   componentWillUnmount() {
@@ -40,7 +40,7 @@ StartButton.defaultProps = {text: "Start Server"};
 
 class StopButton extends ActionButton {
   disabled() {
-    return ! this.state.running;
+    return this.props.server_id != this.state.status.server_id || !this.state.status.running;
   }
   onClick() {
     App.dns.stop_server(this.props.server_id, this);
