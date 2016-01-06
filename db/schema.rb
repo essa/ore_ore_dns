@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151231084925) do
+ActiveRecord::Schema.define(version: 20160106050711) do
 
   create_table "fake_dns_servers", force: :cascade do |t|
     t.string   "name"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 20151231084925) do
     t.text     "hooking_hostnames"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.string   "record_type"
+    t.string   "loglevel"
   end
 
   create_table "log_messages", force: :cascade do |t|

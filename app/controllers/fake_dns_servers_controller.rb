@@ -69,6 +69,6 @@ class FakeDnsServersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def fake_dns_server_params
-      params.require(:fake_dns_server).permit(:name, :target_server, :upstream, :hooking_hostnames)
+      params.require(:fake_dns_server).permit(:name, :target_server, :upstream, :hooking_hostnames, :record_type, :loglevel)
     end
 end

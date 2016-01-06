@@ -82,8 +82,10 @@ class RubyDnsService
   def dns_script
     upstream = @server.upstream
     target_server = @server.target_server
+    record_type = @server.record_type || 'A'
     hooking_hostnames = @server.hooking_hostnames
-    p upstream, target_server, hooking_hostnames
+    loglevel = @server.loglevel || 'DEBUG'
+    p upstream, target_server, record_type, hooking_hostnames, loglevel
     <<-EOS
 require 'rubydns'
 require 'rubydns/system'
@@ -103,17 +105,34 @@ FAKE_HOSTS = %w{
   #{hooking_hostnames}
 }
 
+def answer_for_cname(transaction)
+  answer_cname = Name.create('#{target_server}')
+  transaction.respond!(answer_cname, resource_class: IN::CNAME, ttl: 0)
+end
+
+def answer_for_a(transaction)
+  a = '#{target_server}'
+  transaction.respond!(a, resource_class: IN::A, ttl: 0)
+end
+
 RubyDNS::run_server(:listen => INTERFACES) do
   on(:start) do
-		@logger.level = Logger::INFO
+		@logger.level = Logger::#{loglevel}
     @logger.formatter = Niboshi::JsonFormatter.new
     @logger.info "dns server started for #{target_server}"
 	end
 
   FAKE_HOSTS.each do |h|
-    match(h, IN::A) do |transaction|
-      answer_cname = Name.create('#{target_server}')
-      transaction.respond!(answer_cname, resource_class: IN::CNAME, ttl: 0)
+    if h.include?('*')
+      h.gsub!('.', '\\.')
+      h.gsub!('*', '.*')
+      match(Regexp.new(h), IN::A) do |transaction|
+        answer_for_#{record_type.downcase}(transaction)
+      end
+    else
+      match(h, IN::A) do |transaction|
+        answer_for_#{record_type.downcase}(transaction)
+      end
     end
   end
 

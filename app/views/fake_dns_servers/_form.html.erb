@@ -18,7 +18,8 @@
 
   <div class="pure-control-group">
     <%= f.label :target_server %>
-    <%= f.text_field :target_server, class: "pure-u-6-24" %>
+    <%= f.text_field :target_server, class: "pure-u-12-24" %>
+    <%= f.select :record_type, [ %w{A A}, %w{CNAME CNAME}], class: "pure-u-6-24" %>
   </div>
 
   <div class="pure-control-group">
@@ -28,8 +29,14 @@
 
   <div class="pure-control-group">
     <%= f.label :hooking_hostnames %>
-    <%= f.text_area :hooking_hostnames, class: "pure-u-6-24" %>
+    <%= f.text_area :hooking_hostnames, class: "pure-u-10-24", rows: '10' %>
   </div>
+
+  <div class="pure-control-group">
+    <%= f.label :loglevel %>
+    <%= f.select :loglevel, [ %w{DEBUG DEBUG}, %w{INFO INFO}, %w{WARN WARN}, %w{ERROR ERROR}], class: "pure-u-6-24" %>
+  </div>
+
   <div class="pure-controls">
     <div class="actions">
       <%= f.submit(class: 'pure-button pure-button-primary') %>
