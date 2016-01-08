@@ -15,6 +15,6 @@ ADD . $APP_HOME
 RUN rails db:migrate assets:precompile
 ADD docker_scripts /scripts
 
-EXPOSE 3000 53/tcp 53/udp
+EXPOSE 3000 5300/tcp 5300/udp
 
 CMD /scripts/start.sh
