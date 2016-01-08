@@ -1,5 +1,4 @@
-"use strict";
-// App.dns_event = new EventEmitter2();
+
 var emitter = new EventEmitter2();
 App.dns = App.cable.subscriptions.create("DnsChannel", {
   connected: function() {
