@@ -5,13 +5,13 @@ class ServerList extends React.Component {
   }
   componentDidMount() {
     this.statusListener = (data)=>this.setState({status: data.status});
-    App.dns_event.on('cable.dns.status', this.statusListener);
+    App.dns.on('cable.dns.status', this.statusListener);
     $.get(`/fake_dns_servers.json`, (res) =>{
       this.setState({servers: res});
     });
   }
   componentWillUnmount() {
-    App.dns_event.off('cable.dns.status', this.statusListener);
+    App.dns.off('cable.dns.status', this.statusListener);
   }
   render () {
     const Button = window.ReactPure.Button;

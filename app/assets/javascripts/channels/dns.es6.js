@@ -1,4 +1,6 @@
-App.dns_event = new EventEmitter2();
+"use strict";
+// App.dns_event = new EventEmitter2();
+var emitter = new EventEmitter2();
 App.dns = App.cable.subscriptions.create("DnsChannel", {
   connected: function() {
     console.log('connected');
@@ -8,23 +10,21 @@ App.dns = App.cable.subscriptions.create("DnsChannel", {
   },
   received: function(data) {
     if (data.message) {
-      App.dns_event.emit("cable.dns.message", data);
+      emitter.emit("cable.dns.message", data);
     }
     if (data.status) {
-      console.log(data);
-      App.dns_event.emit("cable.dns.status", data);
+      emitter.emit("cable.dns.status", data);
     }
   },
-  start_server: function(server_id, component) {
-    this.component = component;
+  start_server: function(server_id) {
     return this.perform('start_server', { server_id: server_id });
   },
-  stop_server: function(server_id, component) {
-    this.component = component;
+  stop_server: function(server_id) {
     return this.perform('stop_server', { server_id: server_id });
   },
-  clear_logs: function(server_id, component) {
-    this.component = component;
+  clear_logs: function(server_id) {
     return this.perform('clear_logs', { server_id: server_id });
-  }
+  },
+  on: function(event, listner) { emitter.on(event, listner) },
+  off: function(event, listner) { emitter.off(event, listner)}
 });

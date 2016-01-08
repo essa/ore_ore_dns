@@ -6,13 +6,13 @@ class ActionButton extends React.Component {
   }
   componentDidMount() {
     this.statusListener = (data)=>this.setState({status: data.status});
-    App.dns_event.on('cable.dns.status', this.statusListener);
+    App.dns.on('cable.dns.status', this.statusListener);
     $.get(`/fake_dns_servers/${this.props.server_id}.json`, (res) =>{
       this.setState({status: res.status});
     });
   }
   componentWillUnmount() {
-    App.dns_event.off('cable.dns.status', this.statusListener);
+    App.dns.off('cable.dns.status', this.statusListener);
   }
   render () {
     const Button = window.ReactPure.Button;
