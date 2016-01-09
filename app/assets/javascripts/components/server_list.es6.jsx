@@ -4,13 +4,18 @@ class ServerList extends React.Component {
     this.state = { servers: [], status: {} };
   }
   componentDidMount() {
+    console.log('DidMount');
     this.statusListener = (data)=>this.setState({status: data.status});
     App.dns.on('cable.dns.status', this.statusListener);
     $.get(`/fake_dns_servers.json`, (res) =>{
       this.setState({servers: res});
+      let runningServer = res.find((s)=>s.status.running);
+      if (runningServer)
+        this.setState({status: runningServer.status});
     });
   }
   componentWillUnmount() {
+    console.log('WillUnmount');
     App.dns.off('cable.dns.status', this.statusListener);
   }
   render () {
