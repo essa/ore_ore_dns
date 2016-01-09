@@ -28,9 +28,9 @@ class ServerList extends React.Component {
       return (
         <tr key={s.id}>
           <td>{s.name}</td>
-          <td>{runningMessage}</td>
+          <td><StatusMessage server_id={s.id} initialStatus={s.status}/></td>
           <td>
-            <StartButton server_id={s.id}>Start</StartButton>
+            <StartButton server_id={s.id} initialStatus={s.status}>Start</StartButton>
             &nbsp;
             <Button href={`/fake_dns_servers/${s.id}`}>Show Console</Button>
               &nbsp;

@@ -3,10 +3,11 @@
 class Logs extends React.Component {
   constructor(props) {
    super(props);
-   this.state = {log_messages: [], running: false};
+   this.state = {log_messages: []};
   }
 
   componentDidMount() {
+    console.log('DidMount');
     this.messageListener = (data)=>{
       let m = this.state.log_messages;
       m.unshift(data);
@@ -14,8 +15,12 @@ class Logs extends React.Component {
     };
     App.dns.on('cable.dns.message', this.messageListener);
 
-    this.statusListener = (data)=>this.setState({running: data.status.running});
+    this.statusListener = (data)=>this.setState({status: data.status});
     App.dns.on('cable.dns.status', this.statusListener);
+    $.get(`/fake_dns_servers/${this.props.id}.json`, (res) =>{
+      console.log(res);
+      this.setState({status: res.status});
+    });
 
     $.get(`/fake_dns_servers/${this.props.id}/log_messages`, (res) =>{
       this.setState({log_messages: res.log_messages});
@@ -54,19 +59,10 @@ class Logs extends React.Component {
     let runningMessage = '';
     if (this.state.running)
       runningMessage = 'running';
+    const status = this.state.status;
+    console.log('render', this.state, status);
     return (
-      <Cell size='18'>
-        <Cell>
-          Status:
-          {runningMessage}
-        </Cell>
-        <Cell>
-          <StartButton key='start' server_id={this.props.id} />
-          &nbsp;
-          <StopButton key='stop' server_id={this.props.id} />
-          &nbsp;
-          <Button key='clear' onClick={onClickClear}>Clear Logs</Button>
-        </Cell>
+      <Cell>
         <Cell size='2'>&nbsp;Logs</Cell>
         <Cell size='10' style={{height: '400px', 'overflowX': 'scroll'}}>
           <Table>
@@ -75,6 +71,7 @@ class Logs extends React.Component {
             </tbody>
           </Table>
         </Cell>
+        <Cell>&nbsp;</Cell>
       </Cell>
     );
   }

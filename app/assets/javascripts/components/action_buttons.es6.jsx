@@ -2,14 +2,11 @@
 class ActionButton extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { status: {}};
+    this.state = { status: props.initialStatus || {}};
   }
   componentDidMount() {
     this.statusListener = (data)=>this.setState({status: data.status});
     App.dns.on('cable.dns.status', this.statusListener);
-    $.get(`/fake_dns_servers/${this.props.server_id}.json`, (res) =>{
-      this.setState({status: res.status});
-    });
   }
   componentWillUnmount() {
     App.dns.off('cable.dns.status', this.statusListener);
@@ -48,3 +45,23 @@ class StopButton extends ActionButton {
 }
 
 StopButton.defaultProps = {text: "Stop Server"};
+
+class StatusMessage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { status: props.initialStatus };
+  }
+  componentDidMount() {
+    this.statusListener = (data)=>this.setState({status: data.status});
+    App.dns.on('cable.dns.status', this.statusListener);
+  }
+  componentWillUnmount() {
+    App.dns.off('cable.dns.status', this.statusListener);
+  }
+  render () {
+    const status = this.state.status || {};
+    const running = status.server_id == this.props.server_id && status.running;
+    const runningMessage = running?'running':'';
+    return (<span>{runningMessage}</span>);
+  }
+}
