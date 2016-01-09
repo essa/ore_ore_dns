@@ -1,7 +1,35 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Fake Dns Servers</h1>
+<h1>OreOre DNS</h1>
 
-<%= react_component('ServerList') %>
+<table class='pure-table'>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Status</th>
+      <th colSpan="3">Operation</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @fake_dns_servers.each do |s| %>
+      <tr key="<%= s.id %>">
+        <td><%= s.name %></td>
+        <td>
+          <%= react_component('StatusMessage', server_id: s.id, initialStatus: s.status ) %>
+        </td>
+        <td>
+          <%= react_component('StartButton', {server_id: s.id, initialStatus: s.status}, { tag: 'span'} ) %>
+            &nbsp;
+          <%= link_to 'Show Console', fake_dns_server_path(s), class: 'pure-button ' %>
+              &nbsp;
+          <%= link_to 'Edit Config', edit_fake_dns_server_path(s), class: 'pure-button ' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div>&nbsp;</div>
 
 <%= link_to 'New Fake Dns Server', new_fake_dns_server_path, class: 'pure-button pure-button-primary' %>
