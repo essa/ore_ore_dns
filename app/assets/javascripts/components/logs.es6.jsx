@@ -8,30 +8,26 @@ class Logs extends React.Component {
 
   componentDidMount() {
     console.log('DidMount');
-    this.messageListener = (data)=>{
-      let m = this.state.log_messages;
-      m.unshift(data);
-      this.setState({log_messages: m});
-    };
-    App.dns.on('cable.dns.message', this.messageListener);
+    App.dns.onMessage(this.onMessage.bind(this));
 
     $.get(`/fake_dns_servers/${this.props.id}/log_messages`, (res) =>{
       this.setState({log_messages: res.log_messages});
     });
   }
-  
+
   componentWillUnmount() {
-    App.dns.off('cable.dns.message', this.messageListener);
-    App.dns.off('cable.dns.status', this.statusListener);
+    App.dns.offMessage(this.onMessage);
   }
 
-  onClickClear(e) {
-    //this.setState({log_messages: []});
-    App.dns.clear_logs(this.props.id, this);
-    $.get(`/fake_dns_servers/${this.props.id}/log_messages`, (res) =>{
-      this.setState({log_messages: res.log_messages});
-    });
-  }
+  onMessage(data) {
+    let m = this.state.log_messages;
+    if (data.message == '__CLEAR__')
+      m = [];
+    else
+      m.unshift(data);
+    this.setState({log_messages: m});
+  };
+
 
   render () {
     const Cell = window.ReactPure.Cell;

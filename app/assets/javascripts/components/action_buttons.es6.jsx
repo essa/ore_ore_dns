@@ -6,10 +6,10 @@ class ActionButton extends React.Component {
   }
   componentDidMount() {
     this.statusListener = (data)=>this.setState({status: data.status});
-    App.dns.on('cable.dns.status', this.statusListener);
+    App.dns.onUpdateStatus(this.statusListener);
   }
   componentWillUnmount() {
-    App.dns.off('cable.dns.status', this.statusListener);
+    App.dns.offUpdateStatus(this.statusListener);
   }
   render () {
     const Button = window.ReactPure.Button;
@@ -53,10 +53,10 @@ class StatusMessage extends React.Component {
   }
   componentDidMount() {
     this.statusListener = (data)=>this.setState({status: data.status});
-    App.dns.on('cable.dns.status', this.statusListener);
+    App.dns.onUpdateStatus(this.statusListener);
   }
   componentWillUnmount() {
-    App.dns.off('cable.dns.status', this.statusListener);
+    App.dns.offUpdateStatus(this.statusListener);
   }
   render () {
     const status = this.state.status || {};
@@ -65,3 +65,21 @@ class StatusMessage extends React.Component {
     return (<span>{runningMessage}</span>);
   }
 }
+
+class ClearLogButton extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  onClickClear(e) {
+    App.dns.clear_logs(this.props.server_id);
+  }
+
+  render () {
+    const Button = window.ReactPure.Button;
+    return (
+      <Button key={this.props.key} onClick={this.onClickClear.bind(this)} >{this.props.text}</Button>
+    );
+  }
+}
+ClearLogButton.defaultProps = {text: "Clear Logs"};

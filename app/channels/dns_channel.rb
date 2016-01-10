@@ -5,7 +5,7 @@ class DnsChannel < ApplicationCable::Channel
     running_server = RubyDnsService.running_server
     if running_server
       ActionCable.server.broadcast 'dns_channel', status: running_server.status
-    end      
+    end
   end
 
   def unsubscribed
@@ -23,6 +23,7 @@ class DnsChannel < ApplicationCable::Channel
 
   def clear_logs(params)
     s = FakeDnsServer.find(params['server_id'])
-    s.log_messages.destroy_all
+    ActionCable.server.broadcast 'dns_channel', message: '__CLEAR__'
+    s.log_messages.delete_all
   end
 end

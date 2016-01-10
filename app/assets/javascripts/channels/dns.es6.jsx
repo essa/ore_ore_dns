@@ -25,6 +25,8 @@ App.dns = App.cable.subscriptions.create("DnsChannel", {
   clear_logs(server_id) {
     this.perform('clear_logs', { server_id: server_id });
   },
-  on(event, listner) { this.emitter.on(event, listner) },
-  off(event, listner) { this.emitter.off(event, listner)}
+  onMessage(listner) { this.emitter.on('cable.dns.message', listner) },
+  offMessage(listner) { this.emitter.on('cable.dns.message', listner) },
+  onUpdateStatus(listner) { this.emitter.on('cable.dns.status', listner) },
+  offUpdateStatus(listner) { this.emitter.on('cable.dns.status', listner) },
 });

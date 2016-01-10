@@ -17,6 +17,9 @@
 <div class='pure-u-3-24'>
   <%= react_component('StopButton', server_id: @fake_dns_server.id, initialStatus: @fake_dns_server.status ) %>
 </div>
+<div class='pure-u-3-24'>
+  <%= react_component('ClearLogButton', server_id: @fake_dns_server.id, initialStatus: @fake_dns_server.status ) %>
+</div>
 
 <div class='pure-u-18-24'>
   <%= react_component('Logs', id: @fake_dns_server.id, name: @fake_dns_server.name ) %>
