@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y nodejs redis-server wget zip vim curl p
 
 ENV APP_HOME /app
 
-RUN mkdir $APP_HOME /scripts
+RUN mkdir -p $APP_HOME /scripts /db
 WORKDIR $APP_HOME
 
 ADD Gemfile $APP_HOME/
@@ -12,7 +12,8 @@ ADD Gemfile.lock $APP_HOME/
 RUN bundle install -j 4
 
 ADD . $APP_HOME
-RUN rails db:migrate assets:precompile
+RUN rails assets:precompile && ln -s /db/development.sqlite3 /app/db/development.sqlite3
+
 ADD docker_scripts /scripts
 
 EXPOSE 3000 5300/tcp 5300/udp
