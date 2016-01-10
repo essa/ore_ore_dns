@@ -16,7 +16,9 @@
       <tr key="<%= s.id %>">
         <td><%= s.name %></td>
         <td>
-          <%= react_component('StatusMessage', server_id: s.id, initialStatus: s.status ) %>
+          <div class='pure-u-2-24'>
+            <%= react_component('StatusMessage', {server_id: s.id, initialStatus: s.status}, {tag: 'span'} ) %>
+          </div>
         </td>
         <td>
           <%= react_component('StartButton', {server_id: s.id, initialStatus: s.status}, { tag: 'span'} ) %>

@@ -15,17 +15,11 @@ class Logs extends React.Component {
     };
     App.dns.on('cable.dns.message', this.messageListener);
 
-    this.statusListener = (data)=>this.setState({status: data.status});
-    App.dns.on('cable.dns.status', this.statusListener);
-    $.get(`/fake_dns_servers/${this.props.id}.json`, (res) =>{
-      console.log(res);
-      this.setState({status: res.status});
-    });
-
     $.get(`/fake_dns_servers/${this.props.id}/log_messages`, (res) =>{
       this.setState({log_messages: res.log_messages});
     });
   }
+  
   componentWillUnmount() {
     App.dns.off('cable.dns.message', this.messageListener);
     App.dns.off('cable.dns.status', this.statusListener);
@@ -40,7 +34,6 @@ class Logs extends React.Component {
   }
 
   render () {
-    const Button = window.ReactPure.Button;
     const Cell = window.ReactPure.Cell;
     const Table = window.ReactPure.Table;
     if (!this.state) {
@@ -55,12 +48,7 @@ class Logs extends React.Component {
         </tr>
       );
     });
-    const onClickClear = this.onClickClear.bind(this);
-    let runningMessage = '';
-    if (this.state.running)
-      runningMessage = 'running';
     const status = this.state.status;
-    console.log('render', this.state, status);
     return (
       <Cell>
         <Cell size='2'>&nbsp;Logs</Cell>
