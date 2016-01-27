@@ -1,6 +1,6 @@
 FROM ruby:2.3.0
 
-RUN apt-get update && apt-get install -y nodejs redis-server wget zip vim curl python-pip w3m lv jq software-properties-common telnet dnsutils --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y nodejs redis-server wget zip vim curl python-pip w3m lv jq software-properties-common telnet dnsutils sqlite3 --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 ENV APP_HOME /app
 
