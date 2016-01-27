@@ -42,7 +42,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 
 gem 'react-rails', '~> 1.5.0'
-gem 'rubydns'
+gem 'celluloid-dns', git: 'https://github.com/celluloid/celluloid-dns', branch: 'master'
+gem 'rubydns', git: 'https://github.com/ioquatix/rubydns', branch: 'master'
 gem 'niboshi_json_formatter'
 gem 'sass-rails'
 

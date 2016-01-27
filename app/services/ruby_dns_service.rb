@@ -88,7 +88,6 @@ class RubyDnsService
     p upstream, target_server, record_type, hooking_hostnames, loglevel
     <<-EOS
 require 'rubydns'
-require 'rubydns/system'
 require 'niboshi_json_formatter'
 
 INTERFACES = [
@@ -106,20 +105,28 @@ FAKE_HOSTS = %w{
 }
 
 def answer_for_cname(transaction)
-  answer_cname = Name.create('#{target_server}')
-  transaction.respond!(answer_cname, resource_class: IN::CNAME, ttl: 0)
+  transaction.add(@default_answers, ttl:5)
+  answer_cname = Name.create(@target_server)
+  transaction.respond!(answer_cname, resource_class: IN::CNAME, ttl: 5)
 end
 
 def answer_for_a(transaction)
   a = '#{target_server}'
-  transaction.respond!(a, resource_class: IN::A, ttl: 0)
+  transaction.respond!(a, resource_class: IN::A, ttl: 5)
 end
 
 RubyDNS::run_server(:listen => INTERFACES) do
   on(:start) do
 		@logger.level = Logger::#{loglevel}
     @logger.formatter = Niboshi::JsonFormatter.new
+    @target_server = '#{target_server}'
+    unless @target_server == ''
+      @default_answers = UPSTREAM.addresses_for(@target_server).map do |a|
+        IN::A.new(a)
+      end
+    end
     @logger.info "dns server started for #{target_server}"
+    @logger.info "default answer = #\{@default_answers.inspect}"
 	end
 
   FAKE_HOSTS.each do |h|
