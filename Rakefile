@@ -23,5 +23,6 @@ task :import => ['db:drop', 'db:create'] do
   backup = "/db/oreoredns.sql"
   puts "importing #{db} from #{backup}..."
   system "sqlite3 #{db} < #{backup}"
+  system "mv #{db} /db/development.sqlite3"
   puts "done"
 end
