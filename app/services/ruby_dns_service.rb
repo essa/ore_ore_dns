@@ -130,15 +130,22 @@ RubyDNS::run_server(:listen => INTERFACES) do
 	end
 
   FAKE_HOSTS.each do |h|
-    if h.include?('*')
-      h.gsub!('.', '\\.')
-      h.gsub!('*', '.*')
-      match(Regexp.new(h), IN::A) do |transaction|
-        answer_for_#{record_type.downcase}(transaction)
+    if h[0] == '!'
+      h = h[1..-1]
+      match(h, IN::A) do |transaction|
+        transaction.passthrough!(UPSTREAM)
       end
     else
-      match(h, IN::A) do |transaction|
-        answer_for_#{record_type.downcase}(transaction)
+      if h.include?('*')
+        h.gsub!('.', '\\.')
+        h.gsub!('*', '.*')
+        match(Regexp.new(h), IN::A) do |transaction|
+          answer_for_#{record_type.downcase}(transaction)
+        end
+      else
+        match(h, IN::A) do |transaction|
+          answer_for_#{record_type.downcase}(transaction)
+        end
       end
     end
   end
