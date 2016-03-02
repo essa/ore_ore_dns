@@ -13,10 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require react
-//= require react_ujs
 //= require momentjs
 //= require react-pure.min
 //= require eventemitter2
-//= require components
 //= require_tree .
