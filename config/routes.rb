@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'hello_world', to: 'hello_world#index'
   get 'log_messages/index'
 
   resources :fake_dns_servers do
