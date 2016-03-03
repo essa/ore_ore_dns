@@ -1,21 +1,18 @@
 
 import EventEmitter3 from 'eventemitter3';
-import { ActionCable } from 'action-cable-react';
-
-console.log('ActionCable');
-console.log(ActionCable);
 
 const cable = ActionCable.createConsumer('ws://localhost:5000/cable');
 const emitter = new EventEmitter3();
 
 const dns_channel = cable.subscriptions.create("DnsChannel",{
-    connected() {
+    connected: ()=>{
       console.log('connected');
     },
     disconnected() {
       console.log('disconnected');
     },
     received (data) {
+      console.log("received", data);
       if (data.message) {
         emitter.emit("cable.dns.message", data);
       }

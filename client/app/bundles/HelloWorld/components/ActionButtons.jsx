@@ -6,19 +6,19 @@ import DnsChannel from '../startup/dns_channel';
 import Button from './Button';
 import Cell from './Cell';
 
+console.log(DnsChannel);
+
 class ActionButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = { status: props.initialStatus || {}};
   }
   componentDidMount() {
-    console.log(DnsChannel.onUpdateStatus);
-    console.log(DnsChannel);
     this.statusListener = (data)=>this.setState({status: data.status});
-    DnsChannel.actions.onUpdateStatus(this.statusListener);
+    DnsChannel.onUpdateStatus(this.statusListener);
   }
   componentWillUnmount() {
-    DnsChannel.actions.offUpdateStatus(this.statusListener);
+    DnsChannel.offUpdateStatus(this.statusListener);
   }
   render () {
     return (
@@ -37,7 +37,7 @@ class StartButton extends ActionButton {
     return this.props.server_id == this.state.status.server_id && this.state.status.running;
   }
   onClick() {
-    DnsChannel.actions.start_server(this.props.server_id, this);
+    DnsChannel.start_server(this.props.server_id, this);
   }
 }
 
@@ -48,7 +48,7 @@ class StopButton extends ActionButton {
     return this.props.server_id != this.state.status.server_id || !this.state.status.running;
   }
   onClick() {
-    DnsChannel.actions.stop_server(this.props.server_id, this);
+    DnsChannel.stop_server(this.props.server_id, this);
   }
 }
 
@@ -60,13 +60,11 @@ class StatusMessage extends React.Component {
     this.state = { status: props.initialStatus };
   }
   componentDidMount() {
-    console.log(DnsChannel.onUpdateStatus);
-    console.log(DnsChannel);
     this.statusListener = (data)=>this.setState({status: data.status});
-    DnsChannel.actions.onUpdateStatus(this.statusListener);
+    DnsChannel.onUpdateStatus(this.statusListener);
   }
   componentWillUnmount() {
-    DnsChannel.actions.offUpdateStatus(this.statusListener);
+    DnsChannel.offUpdateStatus(this.statusListener);
   }
   render () {
     const status = this.state.status || {};
@@ -82,7 +80,7 @@ class ClearLogButton extends React.Component {
   }
 
   onClickClear(e) {
-    DnsChannel.actions.clear_logs(this.props.server_id);
+    DnsChannel.clear_logs(this.props.server_id);
   }
 
   render () {

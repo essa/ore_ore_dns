@@ -1,6 +1,7 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in an EventMachine loop that does not support auto reloading.
 class DnsChannel < ApplicationCable::Channel
   def subscribed
+    puts "subscribed"
     stream_from "dns_channel"
     running_server = RubyDnsService.running_server
     if running_server
@@ -9,6 +10,7 @@ class DnsChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
+    puts "unsubscribed"
     # Any cleanup needed when channel is unsubscribed
   end
 

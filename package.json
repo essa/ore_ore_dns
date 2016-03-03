@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/shakacode/react-webpack-rails-tutorial",
   "dependencies": {
-    "action-cable-react": "^0.1.1",
     "classnames": "^2.2.3",
     "eventemitter3": "^1.1.1",
     "react": "^0.13.3"
