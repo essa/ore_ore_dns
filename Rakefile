@@ -7,7 +7,7 @@ Rails.application.load_tasks
 
 desc "export db"
 task :export do
-  db = "db/development.sqlite3"
+  db = "db/production.sqlite3"
   backup = "/db/oreoredns.sql"
   puts "exporting #{db} to #{backup}..."
   system "echo 'delete from log_messages;' | sqlite3 #{db}"
@@ -19,10 +19,9 @@ end
 
 desc "import db"
 task :import => ['db:drop', 'db:create'] do
-  db = "db/development.sqlite3"
+  db = "/db/production.sqlite3"
   backup = "/db/oreoredns.sql"
   puts "importing #{db} from #{backup}..."
   system "sqlite3 #{db} < #{backup}"
-  system "mv #{db} /db/development.sqlite3"
   puts "done"
 end

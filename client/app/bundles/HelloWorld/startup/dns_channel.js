@@ -1,7 +1,17 @@
 
 import EventEmitter3 from 'eventemitter3';
 
-const cable = ActionCable.createConsumer('ws://localhost:5000/cable');
+const loc = window.location;
+var ws_uri;
+if (loc.protocol === "https:") {
+    ws_uri = "wss:";
+} else {
+    ws_uri = "ws:";
+}
+ws_uri += "//" + loc.host;
+ws_uri += "/cable";
+
+const cable = ActionCable.createConsumer(ws_uri);
 const emitter = new EventEmitter3();
 
 const dns_channel = cable.subscriptions.create("DnsChannel",{

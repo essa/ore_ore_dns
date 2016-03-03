@@ -1,0 +1,4 @@
+
+# RAILS_SERVE_STATIC_FILES=true SECRET_KEY_BASE=xxxxxx foreman start -f Procfile.prod
+web: rails s -e production -p 5000
+client: sh -c 'rm app/assets/javascripts/generated/* || true && cd client && npm run build:dev:client'
