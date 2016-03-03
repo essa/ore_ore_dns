@@ -25,3 +25,6 @@ node_modules
 
 # Generated js bundles
 /app/assets/javascripts/generated/*
+
+public/assets/*
+client/npm-debug.log*

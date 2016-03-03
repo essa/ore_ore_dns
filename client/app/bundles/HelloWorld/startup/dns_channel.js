@@ -12,7 +12,7 @@ const dns_channel = cable.subscriptions.create("DnsChannel",{
       console.log('disconnected');
     },
     received (data) {
-      console.log("received", data);
+      // console.log("received", data);
       if (data.message) {
         emitter.emit("cable.dns.message", data);
       }
