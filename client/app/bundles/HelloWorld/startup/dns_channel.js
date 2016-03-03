@@ -30,9 +30,9 @@ const dns_channel = cable.subscriptions.create("DnsChannel",{
       dns_channel.perform('clear_logs', { server_id: server_id });
     },
     onMessage(listner) { emitter.on('cable.dns.message', listner); },
-    offMessage(listner) { emitter.on('cable.dns.message', listner); },
+    offMessage(listner) { emitter.off('cable.dns.message', listner); },
     onUpdateStatus(listner) { emitter.on('cable.dns.status', listner); },
-    offUpdateStatus(listner) { emitter.on('cable.dns.status', listner); },
+    offUpdateStatus(listner) { emitter.off('cable.dns.status', listner); },
   }
 );
 

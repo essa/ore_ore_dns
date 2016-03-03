@@ -15,8 +15,9 @@ export default class Logs extends React.Component {
   }
 
   componentDidMount() {
-    console.log('DidMount');
-    DnsChannel.onMessage(this.onMessage.bind(this));
+    console.log('componentDidMount', this);
+    this.messageListner = this.onMessage.bind(this);
+    DnsChannel.onMessage(this.messageListner);
 
     $.get(`/fake_dns_servers/${this.props.id}/log_messages`, (res) =>{
       this.setState({log_messages: res.log_messages});
@@ -24,10 +25,14 @@ export default class Logs extends React.Component {
   }
 
   componentWillUnmount() {
-    DnsChannel.offMessage(this.onMessage);
+    console.log('componentWillUnmount', this);
+    DnsChannel.offMessage(this.messageListner);
   }
 
   onMessage(data) {
+    if (!this.state) {
+      return ;
+    }
     let m = this.state.log_messages;
     if (data.message == '__CLEAR__')
       m = [];

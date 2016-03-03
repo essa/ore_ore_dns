@@ -46,26 +46,31 @@ class RubyDnsService
     require "open3"
     @@server = @server.reload
     Open3.popen3(RbConfig.ruby) do |i, o, e, w|
-      ActionCable.server.broadcast 'dns_channel', status: { running: true, server_id: @server.id }
-      p w.pid
-      @@pid = w.pid
-      #puts dns_script
-      i.puts dns_script
-      i.close
-      Thread.start do
-        e.each do |line|
-          m = parse_json_message(line)
-          #puts m['message']
-          @server.log_messages.create message: m['message']
+      ActiveRecord::Base.connection_pool.with_connection do
+
+        ActionCable.server.broadcast 'dns_channel', status: { running: true, server_id: @server.id }
+        p w.pid
+        @@pid = w.pid
+        #puts dns_script
+        i.puts dns_script
+        i.close
+        Thread.start do
+          ActiveRecord::Base.connection_pool.with_connection do
+            e.each do |line|
+              m = parse_json_message(line)
+              #puts m['message']
+              @server.log_messages.create message: m['message']
+            end
+          end
         end
+        o.each do |line|
+          #puts line
+          @server.log_messages.create message: line
+        end
+        ActionCable.server.broadcast 'dns_channel', status: { running: false, server_id: @server.id }
+        @server.log_messages.create message: 'server terminated' rescue nil
+        @@pid = nil
       end
-      o.each do |line|
-        #puts line
-        @server.log_messages.create message: line
-      end
-      ActionCable.server.broadcast 'dns_channel', status: { running: false, server_id: @server.id }
-      @server.log_messages.create message: 'server terminated' rescue nil
-      @@pid = nil
     end
   rescue
     @@pid = nil
