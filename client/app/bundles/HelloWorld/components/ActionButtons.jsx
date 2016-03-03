@@ -21,9 +21,7 @@ class ActionButton extends React.Component {
     DnsChannel.offUpdateStatus(this.statusListener);
   }
   render () {
-    return (
-      <Button key={this.props.key} onClick={this.onClick.bind(this)} disabled={this.disabled()}>{this.props.text}</Button>
-    );
+    return (<Button key={this.props.key} onClick={this.onClick.bind(this)} disabled={this.disabled()}>{this.props.text}</Button>);
   }
 }
 
