@@ -4,7 +4,7 @@ class FakeDnsServersController < ApplicationController
   # GET /fake_dns_servers
   # GET /fake_dns_servers.json
   def index
-    @fake_dns_servers = FakeDnsServer.all
+    @fake_dns_servers = FakeDnsServer.order('name')
   end
 
   # GET /fake_dns_servers/1

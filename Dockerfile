@@ -21,7 +21,7 @@ RUN ln -s /usr/bin/nodejs /usr/bin/node && npm install && cd $APP_HOME/client &&
 
 # Install app and generate assets
 ADD . $APP_HOME
-RUN rails assets:precompile && ln -s /db/development.sqlite3 /app/db/development.sqlite3
+RUN rails assets:precompile && ln -s /db/development.sqlite3 /app/db/development.sqlite3 && ln -s /db/production.sqlite3 /app/db/production.sqlite3
 
 ADD docker_scripts /scripts
 
