@@ -3,3 +3,5 @@ log
 tmp
 vendor/bundle
 db/*.sqlite3
+node_modules
+client/node_modules

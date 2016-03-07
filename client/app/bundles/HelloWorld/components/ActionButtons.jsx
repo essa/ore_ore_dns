@@ -1,3 +1,12 @@
+// HelloWorldWidget is an arbitrary name for any "dumb" component. We do not recommend suffixing
+// all your dump component names with Widget.
+
+import React, { PropTypes } from 'react';
+import DnsChannel from '../startup/dns_channel';
+import Button from './Button';
+import Cell from './Cell';
+
+console.log(DnsChannel);
 
 class ActionButton extends React.Component {
   constructor(props) {
@@ -6,16 +15,13 @@ class ActionButton extends React.Component {
   }
   componentDidMount() {
     this.statusListener = (data)=>this.setState({status: data.status});
-    App.dns.onUpdateStatus(this.statusListener);
+    DnsChannel.onUpdateStatus(this.statusListener);
   }
   componentWillUnmount() {
-    App.dns.offUpdateStatus(this.statusListener);
+    DnsChannel.offUpdateStatus(this.statusListener);
   }
   render () {
-    const Button = window.ReactPure.Button;
-    return (
-      <Button key={this.props.key} onClick={this.onClick.bind(this)} disabled={this.disabled()}>{this.props.text}</Button>
-    );
+    return (<Button key={this.props.key} onClick={this.onClick.bind(this)} disabled={this.disabled()}>{this.props.text}</Button>);
   }
 }
 
@@ -29,7 +35,7 @@ class StartButton extends ActionButton {
     return this.props.server_id == this.state.status.server_id && this.state.status.running;
   }
   onClick() {
-    App.dns.start_server(this.props.server_id, this);
+    DnsChannel.start_server(this.props.server_id, this);
   }
 }
 
@@ -40,7 +46,7 @@ class StopButton extends ActionButton {
     return this.props.server_id != this.state.status.server_id || !this.state.status.running;
   }
   onClick() {
-    App.dns.stop_server(this.props.server_id, this);
+    DnsChannel.stop_server(this.props.server_id, this);
   }
 }
 
@@ -53,10 +59,10 @@ class StatusMessage extends React.Component {
   }
   componentDidMount() {
     this.statusListener = (data)=>this.setState({status: data.status});
-    App.dns.onUpdateStatus(this.statusListener);
+    DnsChannel.onUpdateStatus(this.statusListener);
   }
   componentWillUnmount() {
-    App.dns.offUpdateStatus(this.statusListener);
+    DnsChannel.offUpdateStatus(this.statusListener);
   }
   render () {
     const status = this.state.status || {};
@@ -72,14 +78,20 @@ class ClearLogButton extends React.Component {
   }
 
   onClickClear(e) {
-    App.dns.clear_logs(this.props.server_id);
+    DnsChannel.clear_logs(this.props.server_id);
   }
 
   render () {
-    const Button = window.ReactPure.Button;
     return (
       <Button key={this.props.key} onClick={this.onClickClear.bind(this)} >{this.props.text}</Button>
     );
   }
 }
 ClearLogButton.defaultProps = {text: "Clear Logs"};
+
+export default {
+  StartButton,
+  StopButton,
+  ClearLogButton,
+  StatusMessage
+};

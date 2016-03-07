@@ -1,0 +1,10 @@
+
+version: '2'
+services:
+  web:
+    build: .
+    ports:
+     - "0.0.0.0:80:5000"
+     - "0.0.0.0:53:5300/udp"
+    volumes:
+     - ./db:/db

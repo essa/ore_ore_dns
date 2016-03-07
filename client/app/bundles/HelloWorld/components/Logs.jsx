@@ -1,14 +1,23 @@
+// HelloWorldWidget is an arbitrary name for any "dumb" component. We do not recommend suffixing
+// all your dump component names with Widget.
 
+import React, { PropTypes } from 'react';
+import DnsChannel from '../startup/dns_channel';
+import Button from './Button';
+import Cell from './Cell';
+import Table from './Table';
+import moment from 'moment';
 
-class Logs extends React.Component {
+export default class Logs extends React.Component {
   constructor(props) {
    super(props);
    this.state = {log_messages: []};
   }
 
   componentDidMount() {
-    console.log('DidMount');
-    App.dns.onMessage(this.onMessage.bind(this));
+    console.log('componentDidMount', this);
+    this.messageListner = this.onMessage.bind(this);
+    DnsChannel.onMessage(this.messageListner);
 
     $.get(`/fake_dns_servers/${this.props.id}/log_messages`, (res) =>{
       this.setState({log_messages: res.log_messages});
@@ -16,10 +25,14 @@ class Logs extends React.Component {
   }
 
   componentWillUnmount() {
-    App.dns.offMessage(this.onMessage);
+    console.log('componentWillUnmount', this);
+    DnsChannel.offMessage(this.messageListner);
   }
 
   onMessage(data) {
+    if (!this.state) {
+      return ;
+    }
     let m = this.state.log_messages;
     if (data.message == '__CLEAR__')
       m = [];
@@ -30,8 +43,6 @@ class Logs extends React.Component {
 
 
   render () {
-    const Cell = window.ReactPure.Cell;
-    const Table = window.ReactPure.Table;
     if (!this.state) {
       return <div>loading...</div>;
     }

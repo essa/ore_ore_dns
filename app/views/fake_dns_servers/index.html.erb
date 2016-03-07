@@ -22,9 +22,12 @@
         </td>
         <td>
           <%= react_component('StartButton', {server_id: s.id, initialStatus: s.status}, { tag: 'span'} ) %>
-            &nbsp;
+        </td>
+        <td>
           <%= link_to 'Show Console', fake_dns_server_path(s), class: 'pure-button ' %>
               &nbsp;
+        </td>
+        <td>
           <%= link_to 'Edit Config', edit_fake_dns_server_path(s), class: 'pure-button ' %>
         </td>
       </tr>
