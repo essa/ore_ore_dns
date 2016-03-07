@@ -15,7 +15,7 @@ RUN bundle install -j 4
 
 # Install npm packages
 ADD package.json $APP_HOME/
-ADD client/package.json $APP_HOME/client
+ADD client/package.json $APP_HOME/client/package.json
 RUN ln -s /usr/bin/nodejs /usr/bin/node && npm install && cd $APP_HOME/client && npm install
 
 # Install app and generate assets
