@@ -1,7 +1,7 @@
 {
-  "name": "react-webpack-rails-tutorial",
-  "version": "1.1.0",
-  "description": "Built using the react_on_rails generator.",
+  "name": "OreOreDNS",
+  "version": "0.1.0",
+  "description": "Local DNS server for development.",
   "main": "server.js",
   "engines": {
     "node": "5.0.0",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/shakacode/react-webpack-rails-tutorial.git"
+    "url": "https://github.com/essa/ore_ore_dns.git"
   },
   "keywords": [
     "react",
@@ -17,12 +17,12 @@
     "comment",
     "example"
   ],
-  "author": "justin808",
+  "author": "Taku Nakajima",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shakacode/react-webpack-rails-tutorial/issues"
+    "url": "https://github.com/essa/ore_ore_dns.git"
   },
-  "homepage": "https://github.com/shakacode/react-webpack-rails-tutorial",
+  "homepage": "https://github.com/essa/ore_ore_dns.git",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
