@@ -17,11 +17,11 @@
         <td><%= s.name %></td>
         <td>
           <div class='pure-u-2-24'>
-            <%= react_component('StatusMessage', {server_id: s.id, initialStatus: s.status}, {tag: 'span'} ) %>
+            <%= react_component('StatusMessage', {server_id: s.id, initialStatus: s.status, props: {tag: 'span'}} ) %>
           </div>
         </td>
         <td>
-          <%= react_component('StartButton', {server_id: s.id, initialStatus: s.status}, { tag: 'span'} ) %>
+          <%= react_component('StartButton', {server_id: s.id, initialStatus: s.status, props: { tag: 'span'}} ) %>
         </td>
         <td>
           <%= link_to 'Show Console', fake_dns_server_path(s), class: 'pure-button ' %>
