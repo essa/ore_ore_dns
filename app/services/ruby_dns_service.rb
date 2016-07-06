@@ -103,7 +103,7 @@ INTERFACES = [
 Name = Resolv::DNS::Name
 IN = Resolv::DNS::Resource::IN
 
-UPSTREAM = RubyDNS::Resolver.new([[:tcp, "#{upstream}", 53], [:udp, "#{upstream}", 53]])
+UPSTREAM = RubyDNS::Resolver.new([[:tcp, "#{upstream}", 53]])
 
 FAKE_HOSTS = %w{
   #{hooking_hostnames}
